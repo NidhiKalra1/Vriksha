@@ -1,0 +1,818 @@
+/* Vriksha Index Custom CSS Stylesheet */
+
+/* Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+/* CSS Variables for design system tokens */
+:root {
+  --bg-primary: #080A10;
+  --bg-secondary: #0F131E;
+  --bg-glass: rgba(15, 23, 42, 0.45);
+  --bg-glass-hover: rgba(15, 23, 42, 0.65);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glass-hover: rgba(255, 255, 255, 0.16);
+  
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  
+  --color-emerald: #10B981;
+  --color-teal: #06B6D4;
+  --color-blue: #3B82F6;
+  --color-amber: #F59E0B;
+  --color-orange: #F97316;
+  --color-red: #EF4444;
+
+  /* Font mappings */
+  --font-title: 'Outfit', 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Heat Level Gradient Tokens */
+  --grad-very-cool: linear-gradient(135deg, #06B6D4, #3B82F6);
+  --grad-mild: linear-gradient(135deg, #34D399, #059669);
+  --grad-warm: linear-gradient(135deg, #F59E0B, #D97706);
+  --grad-hot: linear-gradient(135deg, #F97316, #EA580C);
+  --grad-extreme: linear-gradient(135deg, #EF4444, #B91C1C);
+  
+  /* Shadow tokens */
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  --shadow-glow-green: 0 0 20px rgba(16, 185, 129, 0.2);
+}
+
+/* Base resets & layouts */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  line-height: 1.5;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Dynamic ambient radial glows */
+.ambient-glow {
+  position: fixed;
+  width: 50vw;
+  height: 50vw;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.15;
+  filter: blur(100px);
+  transition: background 1s ease, transform 10s infinite alternate;
+}
+
+.glow-top-right {
+  top: -10vw;
+  right: -10vw;
+  background: var(--color-emerald);
+}
+
+.glow-bottom-left {
+  bottom: -10vw;
+  left: -10vw;
+  background: var(--color-blue);
+}
+
+/* Master container */
+.app-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header design */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  background: var(--grad-mild);
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-glow-green);
+}
+
+.logo-title {
+  font-family: var(--font-title);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.logo-tag {
+  color: var(--color-emerald);
+  font-weight: 400;
+}
+
+/* Search Screen Hero */
+.hero-section {
+  text-align: center;
+  max-width: 720px;
+  margin: 60px auto 40px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.hero-subtitle {
+  color: var(--color-emerald);
+  font-family: var(--font-title);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.hero-title {
+  font-family: var(--font-title);
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.hero-desc {
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Search bar & dropdown layout */
+.search-wrapper {
+  position: relative;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto 30px auto;
+  z-index: 100;
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 20px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 18px 20px 18px 56px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: 14px;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-family: var(--font-body);
+  outline: none;
+  box-shadow: var(--shadow-glass);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-input:focus {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: var(--bg-glass-hover);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.05), var(--shadow-glass);
+}
+
+.clear-btn {
+  position: absolute;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.clear-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Suggestions Dropdown */
+.suggestions-box {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #111625;
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  box-shadow: var(--shadow-glass);
+  overflow: hidden;
+  max-height: 300px;
+  overflow-y: auto;
+  display: none;
+}
+
+.suggestion-item {
+  padding: 14px 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.2s;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.suggestion-city {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.suggestion-state {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Popular cities buttons list */
+.popular-cities {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.city-pill {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  color: var(--text-secondary);
+  padding: 10px 18px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.city-pill:hover {
+  background: var(--bg-glass-hover);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+}
+
+/* Glassmorphic Cards styling */
+.glass-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-glass);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-glass-hover);
+}
+
+/* Info intro grid */
+.intro-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin: 60px 0;
+  animation: fadeIn 1s ease-out;
+}
+
+.intro-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.intro-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-emerald);
+}
+
+.intro-title {
+  font-family: var(--font-title);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.intro-body {
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Dashboard main screen layout (grid) */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-top: 20px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@media (min-width: 992px) {
+  .dashboard-grid {
+    grid-template-columns: 1.2fr 1.8fr;
+  }
+}
+
+/* Left grid dashboard columns */
+.dash-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Right grid dashboard columns */
+.dash-right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Heat Index Hero Badge */
+.heat-score-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  border-radius: 16px;
+  color: #FFFFFF;
+  margin-bottom: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.heat-score-badge.heat-very-cool { background: var(--grad-very-cool); }
+.heat-score-badge.heat-mild { background: var(--grad-mild); }
+.heat-score-badge.heat-warm { background: var(--grad-warm); }
+.heat-score-badge.heat-hot { background: var(--grad-hot); }
+.heat-score-badge.heat-extreme { background: var(--grad-extreme); }
+
+.badge-label-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.badge-level-text {
+  font-family: var(--font-title);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.badge-tag-text {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.85;
+}
+
+.badge-score-value {
+  font-family: var(--font-title);
+  font-size: 80px;
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+}
+
+/* City weather detail display */
+.weather-details-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.city-meta {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.city-meta-info h2 {
+  font-family: var(--font-title);
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.city-meta-info p {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.temperature-display {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.weather-icon-indicator {
+  font-size: 44px;
+  color: var(--color-emerald);
+}
+
+.temp-primary {
+  font-family: var(--font-title);
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.temp-apparent {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Weather secondary grid */
+.weather-sec-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.sec-metric {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sec-metric-icon {
+  color: var(--color-emerald);
+}
+
+.sec-metric-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sec-metric-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sec-metric-value {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* Formula explaining card */
+.formula-accordion {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 16px;
+}
+
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.accordion-header h3 {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.accordion-content {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.accordion-content.active {
+  display: flex;
+}
+
+.formula-highlight {
+  font-family: monospace;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-primary);
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Tree Plantation Config / slider */
+.config-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.config-header h3 {
+  font-family: var(--font-title);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.slider-label-group {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.slider-label {
+  color: var(--text-secondary);
+}
+
+.slider-val {
+  font-weight: 600;
+  color: var(--color-emerald);
+}
+
+.target-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+
+.target-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-emerald);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+  transition: transform 0.1s;
+}
+
+.target-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Plantation outcomes layout */
+.outcomes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.outcome-widget {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.outcome-icon {
+  color: var(--color-emerald);
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.outcome-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.outcome-value {
+  font-family: var(--font-title);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* Zone listing recommendations */
+.zones-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.zone-item {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.zone-details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.zone-icon {
+  background: rgba(16, 185, 129, 0.08);
+  color: var(--color-emerald);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zone-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.zone-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.zone-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.zone-quantity {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+}
+
+.zone-tree-count {
+  font-family: var(--font-title);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-emerald);
+}
+
+.zone-percentage {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Map CSS */
+.map-card {
+  padding: 0 !important;
+  overflow: hidden;
+  height: 400px;
+}
+
+#leaflet-map {
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+/* Leaflet dark theme override */
+.leaflet-container {
+  background-color: var(--bg-secondary) !important;
+}
+
+.leaflet-tile {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-glass);
+  border-radius: 8px;
+}
+
+.leaflet-popup-tip {
+  background: var(--bg-secondary) !important;
+}
+
+/* State changes / animations */
+.hidden {
+  display: none !important;
+}
+
+/* Loading indicators */
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 60px 0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  border-top-color: var(--color-emerald);
+  animation: spin 1s linear infinite;
+}
+
+/* Feedback alert / notification messages */
+.feedback-message {
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: var(--color-red);
+  font-size: 13px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* Footer layout */
+footer {
+  margin-top: 60px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 24px 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+footer a {
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+footer a:hover {
+  color: var(--color-emerald);
+}
+
+/* Animation declarations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
