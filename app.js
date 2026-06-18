@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const suggestionsDropdown = document.getElementById('suggestions-dropdown');
   const clearSearchBtn = document.getElementById('clear-search-btn');
   const popularCitiesContainer = document.getElementById('popular-cities-pills');
-  
+
   const homeView = document.getElementById('home-view');
   const dashboardView = document.getElementById('dashboard-view');
   const loadingState = document.getElementById('loading-state');
@@ -16,13 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const heatBadgeContainer = document.getElementById('heat-badge-container');
   const heatLevelLabel = document.getElementById('heat-level-label');
   const heatScoreDisplay = document.getElementById('heat-score-display');
-  
+
   const cityTitleDisplay = document.getElementById('city-title-display');
   const dateDisplay = document.getElementById('date-display');
   const weatherIconBox = document.getElementById('weather-icon-box');
   const tempMainDisplay = document.getElementById('temp-main-display');
   const tempFeelsDisplay = document.getElementById('temp-feels-display');
-  
+
   const humidityDisplay = document.getElementById('humidity-display');
   const windDisplay = document.getElementById('wind-display');
 
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event Bindings
     searchInput.addEventListener('input', handleSearchInput);
     clearSearchBtn.addEventListener('click', handleClearSearch);
-    
+
     // Hide dropdown if clicked outside search
     document.addEventListener('click', (e) => {
       if (!searchInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Logo refresh click
     logoRefresh.addEventListener('click', resetToHomeView);
-    
+
     // Lucide setup
     lucide.createIcons();
   }
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearSearchBtn.classList.add('hidden');
     hideSuggestions();
     hideErrorBanner();
-    
+
     dashboardView.classList.add('hidden');
     loadingState.classList.add('hidden');
     homeView.classList.remove('hidden');
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function handleSearchInput(e) {
     const val = e.target.value;
-    
+
     if (val.trim().length > 0) {
       clearSearchBtn.classList.remove('hidden');
     } else {
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     clearTimeout(searchDebounceTimeout);
-    
+
     if (val.trim().length < 3) {
       hideSuggestions();
       return;
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
     locations.forEach(loc => {
       const item = document.createElement('div');
       item.className = 'suggestion-item';
-      
+
       const title = document.createElement('span');
       title.className = 'suggestion-city';
       title.textContent = loc.city;
@@ -210,21 +210,21 @@ document.addEventListener('DOMContentLoaded', () => {
   async function executeCitySelect(cityData) {
     showLoadingState();
     hideErrorBanner();
-    
+
     currentCityData = cityData;
-    
+
     try {
       const weather = await window.APIService.fetchWeather(cityData.lat, cityData.lon);
       currentWeatherState = weather;
-      
+
       populateDashboard();
       showDashboardState();
-      
+
       // Load or update map
       setTimeout(() => {
         initializeOrUpdateMap(cityData.lat, cityData.lon, cityData.city);
       }, 100);
-      
+
     } catch (err) {
       console.error("Failed to load meteorological outputs:", err);
       showErrorBanner("Could not fetch meteorological indicators for this location. Displaying last cached metrics or local estimates.");
@@ -242,10 +242,10 @@ document.addEventListener('DOMContentLoaded', () => {
       weatherCode: 3,
       condition: { label: "Sunny (Estimated)", icon: "sun" }
     };
-    
+
     populateDashboard();
     showDashboardState();
-    
+
     setTimeout(() => {
       initializeOrUpdateMap(cityData.lat, cityData.lon, cityData.city);
     }, 100);
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Set titles
     cityTitleDisplay.textContent = `${currentCityData.city}, ${currentCityData.state || 'India'}`;
-    
+
     const now = new Date();
     const dateOptions = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     dateDisplay.textContent = now.toLocaleDateString('en-US', dateOptions);
@@ -281,14 +281,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const heatModel = window.CONFIG.HEAT_LEVELS[heatScore];
     heatScoreDisplay.textContent = heatScore;
     heatLevelLabel.textContent = `${heatModel.label} (Level ${heatScore})`;
-    
+
     // Clear old color theme class and append new one
     heatBadgeContainer.className = 'heat-score-badge';
     heatBadgeContainer.classList.add(heatModel.class);
 
     // Recalculate plantation outputs based on slider value
     updateTreeRecommendations();
-    
+
     lucide.createIcons();
   }
 
@@ -297,18 +297,18 @@ document.addEventListener('DOMContentLoaded', () => {
    */
   function calculateHeatScore(apparentTemp, humidity, windSpeed) {
     const weights = window.CONFIG.HEAT_SCORING;
-    
+
     // Raw index calculation
-    const rawVal = (apparentTemp * weights.TEMP_WEIGHT) + 
-                   (humidity * weights.HUMIDITY_WEIGHT) + 
-                   (windSpeed * weights.WIND_WEIGHT);
-                   
+    const rawVal = (apparentTemp * weights.TEMP_WEIGHT) +
+      (humidity * weights.HUMIDITY_WEIGHT) +
+      (windSpeed * weights.WIND_WEIGHT);
+
     // Normalize value linearly to a range of 1 - 10
     const rawMin = weights.MIN_RAW_METRIC;
     const rawMax = weights.MAX_RAW_METRIC;
-    
+
     let normalized = Math.round(((rawVal - rawMin) / (rawMax - rawMin)) * 9) + 1;
-    
+
     // Force score boundaries
     normalized = Math.max(1, Math.min(10, normalized));
     return normalized;
@@ -330,9 +330,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const plantationConfig = window.CONFIG.PLANTATION;
 
     // Trees count required
-    const tempDelta = targetCooling; 
+    const tempDelta = Math.max(
+      targetCooling,
+      currentWeatherState.temperature - 20
+    );
     let treeCount = Math.round(tempDelta / plantationConfig.COOLING_EFFECT_PER_TREE);
-    
+
     // Constrain by minimum base canopy cover rules
     if (treeCount < plantationConfig.MINIMUM_TREES_BASE) {
       treeCount = plantationConfig.MINIMUM_TREES_BASE;
