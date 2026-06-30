@@ -339,11 +339,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const plantationConfig = window.CONFIG.PLANTATION;
 
     // Trees count required
-    const tempDelta = Math.max(
-      targetCooling,
-      currentWeatherState.temperature - 20
-    );
-    let treeCount = Math.round(tempDelta / plantationConfig.COOLING_EFFECT_PER_TREE);
+    // coolingImpact = min((trees / 10000) * 1.2, 5) => trees = (targetCooling / 1.2) * 10000
+    let treeCount = Math.round((targetCooling / 1.2) * 10000);
 
     // Constrain by minimum base canopy cover rules
     if (treeCount < plantationConfig.MINIMUM_TREES_BASE) {
@@ -357,7 +354,8 @@ document.addEventListener('DOMContentLoaded', () => {
       currentWeatherState.windSpeed
     );
 
-    const projectedApparentTemp = currentWeatherState.apparentTemperature - targetCooling;
+    const actualCooling = Math.min((treeCount / 10000) * 1.2, 5);
+    const projectedApparentTemp = currentWeatherState.apparentTemperature - actualCooling;
     const projectedScore = calculateHeatScore(
       projectedApparentTemp,
       currentWeatherState.humidity,
@@ -546,7 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Calculations for Impact Estimate
       const numericTrees = parseInt(trees.replace(/,/g, '')) || 0;
-      const tempReduction = (numericTrees * window.CONFIG.PLANTATION.COOLING_EFFECT_PER_TREE).toFixed(1);
+      const tempReduction = Math.min((numericTrees / 10000) * 1.2, 5).toFixed(1);
       const co2Absorption = (numericTrees * 22).toLocaleString(); // 22kg per tree per year
       const waterRetention = (numericTrees * 100).toLocaleString(); // 100 gallons per tree per year
       const greenCoverage = (numericTrees * 5).toLocaleString(); // 5 sq meters per tree
