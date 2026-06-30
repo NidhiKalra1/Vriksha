@@ -8,10 +8,10 @@ const APIService = {
    */
   async searchIndianCities(query) {
     if (!query || query.trim().length < 3) return [];
-    
+
     // We append a custom User-Agent in parameters as requested by Nominatim guidelines to avoid blocking
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&countrycodes=in&limit=5&addressdetails=1`;
-    
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&countrycodes=in&limit=8&addressdetails=1`;
+
     try {
       const response = await fetch(url, {
         headers: {
@@ -19,19 +19,19 @@ const APIService = {
           'User-Agent': 'VrikshaHeatIndexApp/1.0 (India Heat Scale & Tree Plantation Planner)'
         }
       });
-      
+
       if (!response.ok) {
         throw new Error(`Nominatim search failed: ${response.statusText}`);
       }
-      
+
       const data = await response.json();
-      
+
       // Map and clean raw data
       return data.map(item => {
         const address = item.address || {};
-        const cityName = address.city || address.town || address.village || address.suburb || address.state_district || item.display_name.split(',')[0];
+        const cityName = address.city || address.town || address.village || address.suburb || address.neighbourhood || address.state_district || item.display_name.split(',')[0];
         const stateName = address.state || '';
-        
+
         return {
           displayName: item.display_name,
           city: cityName,
@@ -55,16 +55,16 @@ const APIService = {
    */
   async fetchWeather(lat, lon) {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,weather_code&timezone=auto`;
-    
+
     try {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`Open-Meteo weather retrieval failed: ${response.statusText}`);
       }
-      
+
       const data = await response.json();
       const current = data.current || {};
-      
+
       return {
         temperature: current.temperature_2m,
         apparentTemperature: current.apparent_temperature !== undefined ? current.apparent_temperature : current.temperature_2m,

@@ -11,11 +11,11 @@
   --bg-glass-hover: rgba(15, 23, 42, 0.65);
   --border-glass: rgba(255, 255, 255, 0.08);
   --border-glass-hover: rgba(255, 255, 255, 0.16);
-  
+
   --text-primary: #F8FAFC;
   --text-secondary: #94A3B8;
   --text-muted: #64748B;
-  
+
   --color-emerald: #10B981;
   --color-teal: #06B6D4;
   --color-blue: #3B82F6;
@@ -33,7 +33,7 @@
   --grad-warm: linear-gradient(135deg, #F59E0B, #D97706);
   --grad-hot: linear-gradient(135deg, #F97316, #EA580C);
   --grad-extreme: linear-gradient(135deg, #EF4444, #B91C1C);
-  
+
   /* Shadow tokens */
   --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
   --shadow-glow-green: 0 0 20px rgba(16, 185, 129, 0.2);
@@ -386,14 +386,28 @@ header {
   border-radius: 16px;
   color: #FFFFFF;
   margin-bottom: 8px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-.heat-score-badge.heat-very-cool { background: var(--grad-very-cool); }
-.heat-score-badge.heat-mild { background: var(--grad-mild); }
-.heat-score-badge.heat-warm { background: var(--grad-warm); }
-.heat-score-badge.heat-hot { background: var(--grad-hot); }
-.heat-score-badge.heat-extreme { background: var(--grad-extreme); }
+.heat-score-badge.heat-very-cool {
+  background: var(--grad-very-cool);
+}
+
+.heat-score-badge.heat-mild {
+  background: var(--grad-mild);
+}
+
+.heat-score-badge.heat-warm {
+  background: var(--grad-warm);
+}
+
+.heat-score-badge.heat-hot {
+  background: var(--grad-hot);
+}
+
+.heat-score-badge.heat-extreme {
+  background: var(--grad-extreme);
+}
 
 .badge-label-group {
   display: flex;
@@ -809,10 +823,30 @@ footer a:hover {
 
 /* Animation declarations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ai-card {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ai-section {
+  margin-top: 15px;
 }

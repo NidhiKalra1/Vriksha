@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vriksha Index — India Heat & Canopy Planner</title>
-  
+
   <!-- Leaflet CSS for Interactive Map -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
   <!-- Stylesheets -->
   <link rel="stylesheet" href="index.css">
 </head>
+
 <body>
 
   <!-- Ambient background glow elements -->
@@ -18,16 +21,17 @@
   <div class="ambient-glow glow-bottom-left"></div>
 
   <div class="app-container">
-    
+
     <!-- Top Header -->
     <header>
       <div class="logo-section" id="logo-refresh" style="cursor: pointer;">
         <div class="logo-icon">
-          <i data-lucide="trees" style="color: #ffffff; width: 22px; height: 22px;"></i>
+          <i data-lucide="tree-pine" style="color: #ffffff; width: 22px; height: 22px;"></i>
         </div>
         <h1 class="logo-title">Vriksha<span class="logo-tag">Index</span></h1>
       </div>
-      <div class="app-tagline" style="font-size: 12px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; display: none; sm: block;">
+      <div class="app-tagline"
+        style="font-size: 12px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; display: none; sm: block;">
         Realweather Canopy Advisor
       </div>
     </header>
@@ -36,14 +40,15 @@
     <div class="search-wrapper">
       <div class="search-box">
         <i data-lucide="search" class="search-icon"></i>
-        <input type="text" id="city-search-input" class="search-input" placeholder="Search any city or district in India..." autocomplete="off">
+        <input type="text" id="city-search-input" class="search-input"
+          placeholder="Search any city or district in India..." autocomplete="off">
         <button id="clear-search-btn" class="clear-btn hidden">
           <i data-lucide="x"></i>
         </button>
       </div>
       <!-- Suggestions dropdown -->
       <div id="suggestions-dropdown" class="suggestions-box"></div>
-      
+
       <!-- Quick Search Pills -->
       <div class="popular-cities" id="popular-cities-pills">
         <!-- JS generates popular city buttons here -->
@@ -65,7 +70,8 @@
         <span class="hero-subtitle">India Thermal canopy initiative</span>
         <h2 class="hero-title">Track Heat Scores. Plan Reforestation.</h2>
         <p class="hero-desc">
-          Enter any Indian city above to see current heat indices computed from real-time meteorological feeds, and configure local tree canopy plans to combat heat island effects.
+          Enter any Indian city above to see current heat indices computed from real-time meteorological feeds, and
+          configure local tree canopy plans to combat heat island effects.
         </p>
       </div>
 
@@ -77,27 +83,30 @@
           </div>
           <h3 class="intro-title">Heat Indexing (1–10)</h3>
           <p class="intro-body">
-            Calculates raw urban heat stressors by analyzing real-time temperature, apparent feels-like levels, humidity, and wind mitigation indicators.
+            Calculates raw urban heat stressors by analyzing real-time temperature, apparent feels-like levels,
+            humidity, and wind mitigation indicators.
           </p>
         </div>
-        
+
         <div class="glass-card intro-card">
           <div class="intro-icon">
             <i data-lucide="tree-pine"></i>
           </div>
           <h3 class="intro-title">Canopy Planning</h3>
           <p class="intro-body">
-            Simulates the microclimate benefits of target tree planting quotas. Configure target cooling thresholds to view tree counts needed.
+            Simulates the microclimate benefits of target tree planting quotas. Configure target cooling thresholds to
+            view tree counts needed.
           </p>
         </div>
-        
+
         <div class="glass-card intro-card">
           <div class="intro-icon">
             <i data-lucide="map-pin"></i>
           </div>
           <h3 class="intro-title">Zonal Placements</h3>
           <p class="intro-body">
-            Distributes plantation quotes across high-benefit regions (parking lots, roadsides, and school yards) shown on Leaflet maps.
+            Distributes plantation quotes across high-benefit regions (parking lots, roadsides, and school yards) shown
+            on Leaflet maps.
           </p>
         </div>
       </div>
@@ -105,10 +114,20 @@
 
     <!-- Page Content View State: Dashboard -->
     <main id="dashboard-view" class="dashboard-grid hidden">
-      
+
       <!-- Left Dashboard Column -->
       <div class="dash-left">
-        
+
+        <!-- Dashboard Intro -->
+        <div class="glass-card" style="margin-bottom: 24px; padding: 20px;">
+          <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 16px; color: var(--color-emerald);">About Vriksha
+            Index</h3>
+          <p style="margin: 0; font-size: 14px; color: var(--text-secondary); line-height: 1.5;">
+            Urban heat is increasing due to declining green cover. Vriksha Index helps cities decide where to plant,
+            what to plant, and how many trees are needed.
+          </p>
+        </div>
+
         <!-- Heat score visualizer -->
         <div id="heat-badge-container" class="heat-score-badge">
           <div class="badge-label-group">
@@ -147,7 +166,7 @@
                 <span id="humidity-display" class="sec-metric-value">--%</span>
               </div>
             </div>
-            
+
             <div class="sec-metric">
               <i data-lucide="wind" class="sec-metric-icon"></i>
               <div class="sec-metric-info">
@@ -164,12 +183,15 @@
               <i data-lucide="chevron-down" id="accordion-arrow" style="transition: transform 0.2s;"></i>
             </div>
             <div class="accordion-content" id="accordion-body">
-              <p>The heat index measures relative thermal distress on a scale of 1 to 10 by mapping meteorological measurements to standard Indian summers:</p>
+              <p>The heat index measures relative thermal distress on a scale of 1 to 10 by mapping meteorological
+                measurements to standard Indian summers:</p>
               <div class="formula-highlight">
                 Raw Score = (Apparent Temp × 0.7) + (Humidity × 0.1) - (Wind Speed × 0.15)
               </div>
               <p>
-                Wind speed acts as a negative factor to account for evaporative cooling, while high apparent temp and humidity compound thermal discomfort. The score maps lower values (~15°C) to 1, and extreme indicators (~48°C) to 10.
+                Wind speed acts as a negative factor to account for evaporative cooling, while high apparent temp and
+                humidity compound thermal discomfort. The score maps lower values (~15°C) to 1, and extreme indicators
+                (~48°C) to 10.
               </p>
             </div>
           </div>
@@ -179,12 +201,14 @@
 
       <!-- Right Dashboard Column -->
       <div class="dash-right">
-        
+
         <!-- Canopy Recommendations -->
         <div class="glass-card">
           <div class="config-header">
             <h3>Canopy Planner</h3>
-            <span style="font-size: 11px; background: rgba(16, 185, 129, 0.1); color: var(--color-emerald); padding: 4px 10px; border-radius: 20px; font-weight: 500;">Dynamic Estimate</span>
+            <span
+              style="font-size: 11px; background: rgba(16, 185, 129, 0.1); color: var(--color-emerald); padding: 4px 10px; border-radius: 20px; font-weight: 500;">Dynamic
+              Estimate</span>
           </div>
 
           <!-- Temperature offset Slider -->
@@ -203,7 +227,7 @@
               <span class="outcome-label">Minimum Trees Needed</span>
               <div id="metric-trees-count" class="outcome-value">--</div>
             </div>
-            
+
             <div class="outcome-widget">
               <div class="outcome-icon"><i data-lucide="sparkles" style="width: 24px; height: 24px;"></i></div>
               <span class="outcome-label">Projected Heat Level</span>
@@ -223,7 +247,39 @@
         </div>
 
       </div>
-      
+      <!-- AI Green Planner -->
+      <div id="ai-planner-card" class="planner-card">
+        <h2>🌱 AI Urban Green Planner</h2>
+        <div id="ai-analysis">
+          <p>AI will analyse city data...</p>
+        </div>
+        <button id="generate-plan-btn">Generate AI Green Plan</button>
+
+      </div>
+      <div id="ai-report" class="ai-card hidden">
+
+        <h2>AI Plantation Recommendation</h2>
+
+        <p id="ai-summary">
+          AI is analysing climate conditions...
+        </p>
+
+        <div class="ai-section">
+          Recommended Species:
+          <br>
+          ${species}
+        </div>
+
+        <div class="ai-section">
+          🌍 Impact Prediction
+          <ul>
+            <li>Reduced heat zones</li>
+            <li>Improved air quality</li>
+            <li>Better urban greenery</li>
+          </ul>
+        </div>
+
+      </div>
     </main>
 
     <!-- Footer info -->
@@ -235,14 +291,17 @@
   </div>
 
   <!-- Leaflet.js library script -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
   <!-- Lucide icons package -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  
+
   <!-- Custom JS Modules -->
   <script src="config.js"></script>
   <script src="apiService.js"></script>
+  <script src="lemmaAgent.js"></script>
   <script src="app.js"></script>
 </body>
+
 </html>

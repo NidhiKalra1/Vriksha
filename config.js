@@ -6,7 +6,7 @@ const CONFIG = {
     TEMP_WEIGHT: 0.7,
     HUMIDITY_WEIGHT: 0.1,
     WIND_WEIGHT: -0.15, // Wind helps reduce heat
-    
+
     // Bounds for normalization to a 1-10 scale
     MIN_RAW_METRIC: 10,  // e.g., equivalent to ~15°C with moderate wind/humidity
     MAX_RAW_METRIC: 40,  // e.g., equivalent to ~48°C with high humidity
@@ -29,8 +29,8 @@ const CONFIG = {
   // Tree plantation recommendation logic
   PLANTATION: {
     // Expected cooling in degrees Celsius per mature tree in its local microclimate area
-    COOLING_EFFECT_PER_TREE: 0.0005, 
-    
+    COOLING_EFFECT_PER_TREE: 0.0005,
+
     // Base minimum trees even if the delta is very low, to maintain healthy cover
     MINIMUM_TREES_BASE: 150,
 

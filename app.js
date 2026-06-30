@@ -37,7 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const metricTreesCount = document.getElementById('metric-trees-count');
   const metricHeatDrop = document.getElementById('metric-heat-drop');
   const zonesBreakdownList = document.getElementById('zones-breakdown-list');
-
+  const generatePlanBtn = document.getElementById('generate-plan-btn');
+  const aiReport = document.getElementById('ai-report');
   // Map state
   let leafletMapInstance = null;
   let mapMarkersLayerGroup = null;
@@ -65,14 +66,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Slider listener
+    // Slider listeners
     coolingSlider.addEventListener('input', handleSliderChange);
+    coolingSlider.addEventListener('change', () => {
+      if (!aiReport.classList.contains('hidden')) {
+        generateAIPlan();
+      }
+    });
 
     // Accordion trigger
     accordionTrigger.addEventListener('click', toggleAccordion);
 
     // Logo refresh click
     logoRefresh.addEventListener('click', resetToHomeView);
+
+    generatePlanBtn.addEventListener('click', generateAIPlan);
 
     // Lucide setup
     lucide.createIcons();
@@ -212,6 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
     hideErrorBanner();
 
     currentCityData = cityData;
+    console.log("Selected location data:", currentCityData);
 
     try {
       const weather = await window.APIService.fetchWeather(cityData.lat, cityData.lon);
@@ -222,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Load or update map
       setTimeout(() => {
-        initializeOrUpdateMap(cityData.lat, cityData.lon, cityData.city);
+        initializeOrUpdateMap(cityData.lat, cityData.lon, cityData.city || cityData.name);
       }, 100);
 
     } catch (err) {
@@ -247,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showDashboardState();
 
     setTimeout(() => {
-      initializeOrUpdateMap(cityData.lat, cityData.lon, cityData.city);
+      initializeOrUpdateMap(cityData.lat, cityData.lon, cityData.city || cityData.name);
     }, 100);
   }
 
@@ -255,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!currentCityData || !currentWeatherState) return;
 
     // Set titles
-    cityTitleDisplay.textContent = `${currentCityData.city}, ${currentCityData.state || 'India'}`;
+    cityTitleDisplay.textContent = `${currentCityData.city || currentCityData.name}, ${currentCityData.state || 'India'}`;
 
     const now = new Date();
     const dateOptions = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
@@ -501,4 +510,128 @@ document.addEventListener('DOMContentLoaded', () => {
     if (score <= 8) return '#F97316'; // Orange
     return '#EF4444'; // Red
   }
+  async function generateAIPlan() {
+    const heatScore = parseInt(heatScoreDisplay.textContent) || 0;
+    const city = currentCityData?.city || currentCityData?.name || "Selected City";
+    const trees = metricTreesCount.textContent;
+    const heatLevel = heatLevelLabel.textContent;
+
+    // Change button state to loading
+    const originalBtnText = generatePlanBtn.innerHTML;
+    generatePlanBtn.innerHTML = '<div class="spinner" style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 8px; border-width: 2px;"></div> Analyzing...';
+    generatePlanBtn.disabled = true;
+
+    // Show processing state in report card
+    aiReport.classList.remove('hidden');
+    aiReport.innerHTML = `
+      <div style="text-align: center; padding: 20px;">
+        <div class="spinner" style="margin: 0 auto 10px;"></div>
+        <p style="color: var(--text-secondary);">Lemma Agent is processing climate data for ${city}...</p>
+      </div>
+    `;
+
+    try {
+      // 1. Prepare data for Lemma Agent
+      const agentContext = {
+        city: city,
+        heatScore: heatScore,
+        heatLevel: heatLevel,
+        targetTrees: trees,
+        weather: currentWeatherState
+      };
+
+      // 2. Call Lemma Agent Workflow
+      const plan = await window.LemmaAgentService.generatePlantationStrategy(agentContext);
+
+      // Calculations for Impact Estimate
+      const numericTrees = parseInt(trees.replace(/,/g, '')) || 0;
+      const tempReduction = (numericTrees * window.CONFIG.PLANTATION.COOLING_EFFECT_PER_TREE).toFixed(1);
+      const co2Absorption = (numericTrees * 22).toLocaleString(); // 22kg per tree per year
+      const waterRetention = (numericTrees * 100).toLocaleString(); // 100 gallons per tree per year
+      const greenCoverage = (numericTrees * 5).toLocaleString(); // 5 sq meters per tree
+
+      // 3. Render the dynamic output
+      aiReport.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">
+          <h3 style="margin: 0; font-size: 20px;">${city} Vriksha Improvement Plan</h3>
+          <span style="font-size: 11px; background: rgba(139, 92, 246, 0.15); color: #a78bfa; padding: 6px 12px; border-radius: 20px; font-weight: 600; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);">
+            <i data-lucide="bot" style="width: 14px; height: 14px;"></i> Powered by Lemma Agent
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 16px;">
+          <!-- Heat Analysis -->
+          <div class="ai-section" style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 12px;">
+            <h4 style="margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px; color: #f87171;">
+              <i data-lucide="thermometer-sun" style="width: 18px; height: 18px;"></i> 🌡 Heat Analysis
+            </h4>
+            <div style="font-size: 14px;">
+              <p style="margin: 0 0 8px 0;">Current Heat Risk: <strong style="color: #fff;">${heatLevel}</strong></p>
+              <p style="margin: 0;">Target Plantation: <strong style="color: #fff;">${trees}</strong> trees needed for mitigation</p>
+            </div>
+          </div>
+
+          <!-- Recommended Species -->
+          <div class="ai-section" style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 12px;">
+            <h4 style="margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px; color: var(--color-emerald);">
+              <i data-lucide="leaf" style="width: 18px; height: 18px;"></i> 🌳 Recommended Species
+            </h4>
+            <div style="font-size: 14px;">
+              ${plan.speciesHtml}
+            </div>
+          </div>
+
+          <!-- Plantation Strategy (AI Reasoning) -->
+          <div class="ai-section" style="background: rgba(16, 185, 129, 0.05); padding: 16px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2);">
+            <h4 style="margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px; color: var(--color-emerald);">
+              <i data-lucide="map-pin" style="width: 18px; height: 18px;"></i> 📍 Plantation Locations & Strategy
+            </h4>
+            <div style="font-size: 14px; margin-bottom: 8px; font-weight: 600;">Why these species were selected:</div>
+            <p style="margin: 0; font-size: 14px; font-style: italic; line-height: 1.6;">
+              "${plan.reasoning}"
+            </p>
+          </div>
+
+          <!-- Expected Impact (Impact Estimate) -->
+          <div class="ai-section" style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 12px;">
+            <h4 style="margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px; color: #60a5fa;">
+              <i data-lucide="globe" style="width: 18px; height: 18px;"></i> 🌍 Expected Impact
+            </h4>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">
+                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Temp Reduction</div>
+                <div style="font-size: 16px; font-weight: 600; color: #fff;">-${tempReduction}°C</div>
+              </div>
+              <div style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">
+                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">CO₂ Absorption</div>
+                <div style="font-size: 16px; font-weight: 600; color: #fff;">${co2Absorption} kg/yr</div>
+              </div>
+              <div style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">
+                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Green Coverage</div>
+                <div style="font-size: 16px; font-weight: 600; color: #fff;">+${greenCoverage} m²</div>
+              </div>
+              <div style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">
+                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Water Retention</div>
+                <div style="font-size: 16px; font-weight: 600; color: #fff;">${waterRetention} gal/yr</div>
+              </div>
+            </div>
+            
+            <ul style="margin-top: 16px; margin-bottom: 0; padding-left: 20px; font-size: 14px; line-height: 1.6; color: var(--text-secondary);">
+              ${plan.impact.map(item => `<li>${item}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+      `;
+      lucide.createIcons();
+    } catch (error) {
+      console.error("Agent generation failed:", error);
+      aiReport.innerHTML = `<p style="color: #ef4444;">Failed to generate plan from Lemma Agent. Please check console logs.</p>`;
+    } finally {
+      // Restore button
+      generatePlanBtn.innerHTML = originalBtnText;
+      generatePlanBtn.disabled = false;
+    }
+  }
+
 });
