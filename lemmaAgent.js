@@ -20,19 +20,29 @@ class LemmaAgent {
 
     // FALLBACK MOCK RESPONSE
     const heatScore = contextData.heatScore;
+    const coolingTarget = contextData.coolingTarget || 3.0;
     const city = contextData.city || 'this region';
     let species, reasoning;
 
-    if (heatScore >= 8) {
+    if (coolingTarget >= 5.0) {
+      species = `
+        <ul style="list-style: none; padding-left: 0; margin-top: 8px;">
+          <li style="margin-bottom: 4px;">🌿 <strong>Banyan</strong> - Massive shade coverage for rapid cooling</li>
+          <li style="margin-bottom: 4px;">🌿 <strong>Peepal</strong> - Excellent transpiration cooling</li>
+          <li style="margin-bottom: 4px;">🌿 <strong>Neem</strong> - Dense canopy and high heat tolerance</li>
+        </ul>
+      `;
+      reasoning = `The aggressive cooling target of -${coolingTarget}°C for ${city} requires prioritizing massive canopy species like Banyan and Peepal to maximize shade and evaporative cooling across urban zones.`;
+    } else if (heatScore >= 8) {
       species = `
         <ul style="list-style: none; padding-left: 0; margin-top: 8px;">
           <li style="margin-bottom: 4px;">🌿 <strong>Neem</strong> - Extreme heat tolerant</li>
-          <li style="margin-bottom: 4px;">🌿 <strong>Banyan</strong> - Maximum shade coverage</li>
           <li style="margin-bottom: 4px;">🌿 <strong>Khejri</strong> - Drought resistant</li>
+          <li style="margin-bottom: 4px;">🌿 <strong>Siris</strong> - Wide canopy coverage</li>
         </ul>
       `;
       reasoning = `High heat and dry conditions in ${city} require robust, deep-rooted native species that provide expansive canopy cover and resist severe thermal distress.`;
-    } else if (heatScore >= 5) {
+    } else if (heatScore >= 5 || coolingTarget >= 3.0) {
       species = `
         <ul style="list-style: none; padding-left: 0; margin-top: 8px;">
           <li style="margin-bottom: 4px;">🌿 <strong>Amaltas</strong> - Urban friendly canopy</li>
@@ -40,7 +50,7 @@ class LemmaAgent {
           <li style="margin-bottom: 4px;">🌿 <strong>Gulmohar</strong> - Biodiversity support</li>
         </ul>
       `;
-      reasoning = `Moderate thermal metrics for ${city} suggest a balanced approach focusing on urban-friendly shade trees that also rapidly support local biodiversity.`;
+      reasoning = `Moderate thermal metrics and cooling targets for ${city} suggest a balanced approach focusing on urban-friendly shade trees that also rapidly support local biodiversity.`;
     } else {
       species = `
         <ul style="list-style: none; padding-left: 0; margin-top: 8px;">
@@ -49,7 +59,7 @@ class LemmaAgent {
           <li style="margin-bottom: 4px;">🌿 <strong>Kachnar</strong> - Local plantation</li>
         </ul>
       `;
-      reasoning = `Comfortable temperatures in ${city} allow for diverse ornamental and structural plantations primarily for aesthetic, localized shading, and ecosystem health.`;
+      reasoning = `Comfortable temperatures and lower cooling targets in ${city} allow for diverse ornamental and structural plantations primarily for aesthetic, localized shading, and ecosystem health.`;
     }
 
     return {

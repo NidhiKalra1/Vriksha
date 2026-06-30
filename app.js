@@ -537,7 +537,8 @@ document.addEventListener('DOMContentLoaded', () => {
         heatScore: heatScore,
         heatLevel: heatLevel,
         targetTrees: trees,
-        weather: currentWeatherState
+        weather: currentWeatherState,
+        coolingTarget: parseFloat(coolingSlider.value)
       };
 
       // 2. Call Lemma Agent Workflow
